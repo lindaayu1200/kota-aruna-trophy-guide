@@ -1,5 +1,26 @@
 [
-  { "file": "1-checklist.jpg", "path": "/", "viewport": { "width": 1280, "height": 800 } },
-  { "file": "2-silver.jpg", "path": "/", "grade": "silver", "viewport": { "width": 1280, "height": 800 } },
-  { "file": "3-bronze.jpg", "path": "/", "grade": "bronze", "scroll": 1400, "viewport": { "width": 1280, "height": 800 } }
+  {
+    "file": "1-checklist-guide.jpg",
+    "view": "Ledger",
+    "description": "Cover: the staged checklist with grade, missable and hidden badges beside a cited guide open in the centre pane.",
+    "viewport": { "width": 1280, "height": 800 }
+  },
+  {
+    "file": "2-roadmap-missables.jpg",
+    "view": "Roadmap",
+    "description": "The full missable-safe numbered platinum route by stage, with the missables watchlist alongside it.",
+    "viewport": { "width": 1280, "height": 800 }
+  },
+  {
+    "file": "3-filters-spoiler.jpg",
+    "view": "Ledger",
+    "description": "Missable-only kind filter with spoiler mode on: unearned story trophies are masked as ??? hidden story trophy.",
+    "viewport": { "width": 1280, "height": 800 }
+  },
+  {
+    "file": "4-collectibles.jpg",
+    "view": "Collectibles",
+    "description": "Full collectible tables: required counts, in-game names, linked trophies and source chips.",
+    "viewport": { "width": 1280, "height": 800 }
+  }
 ]
