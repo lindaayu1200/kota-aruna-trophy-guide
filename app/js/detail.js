@@ -2,6 +2,33 @@
 import { esc, mini, gradeBadge, countLabel } from './util.js';
 import { isMasked, visibleName, visibleDescription } from './spoiler.js';
 
+// Arrow keys walk the checklist in exactly the order the current filter/search produced.
+// There is no overlay to dismiss: Escape intentionally does nothing, so navigation stays put.
+let navigation = null;
+let keysInstalled = false;
+
+function installNavigation() {
+  if (keysInstalled || typeof document === 'undefined') return;
+  keysInstalled = true;
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') return;
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
+    const target = event.target;
+    if (target?.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target?.tagName)) return;
+    if (!navigation) return;
+    const rows = [...document.querySelectorAll('#trophy-list .trophy-row[data-name]')];
+    if (!rows.length) return;
+    const names = rows.map((row) => row.dataset.name);
+    const step = event.key === 'ArrowRight' ? 1 : -1;
+    const index = names.indexOf(navigation.current);
+    const next = index < 0 ? (step === 1 ? 0 : names.length - 1) : (index + step + names.length) % names.length;
+    event.preventDefault();
+    navigation.onOpen(names[next]);
+    document.querySelector('#trophy-list .trophy-row.is-selected')?.scrollIntoView({ block: 'nearest' });
+  });
+}
+
 function relatedTo(trophy, all, limit = 6) {
   const sameStage = all.filter((t) => t.id !== trophy.id && t.roadmap_stage === trophy.roadmap_stage);
   const sameKind = all.filter((t) => t.id !== trophy.id && t.kind === trophy.kind && !sameStage.includes(t));
@@ -19,6 +46,8 @@ function lockedPage(trophy) {
 
 export function renderDetail(host, trophy, options) {
   const { all, earned, spoilerOn, onOpen } = options;
+  navigation = { current: trophy?.name ?? null, onOpen };
+  installNavigation();
   if (!trophy) {
     host.innerHTML = '<div class="empty">Choose a trophy from the checklist to read its guide.</div>';
     return;
@@ -60,7 +89,7 @@ export function renderDetail(host, trophy, options) {
       <ol class="steps">${steps}</ol>
     </section>
     <section class="section">
-      <h3>Sources</h3>
+      <h3>Sources (${trophy.sources.length})</h3>
       <ul class="sources">${sources}</ul>
     </section>
     <section class="section">
